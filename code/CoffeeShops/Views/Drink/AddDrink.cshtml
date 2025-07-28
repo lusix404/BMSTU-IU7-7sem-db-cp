@@ -1,0 +1,190 @@
+﻿@model CoffeeShops.ViewModels.AddDrinkViewModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/css/log_reg_style.css" />
+    <link rel="stylesheet" href="~/css/errorstyle.css" />
+    <link rel="stylesheet" href="~/css/header_container_style.css" />
+    <link rel="stylesheet" href="~/css/logout_button.css" />
+    <title>Добавление напитка</title>
+    <style>
+        .back-btn {
+            padding: 5px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #EDE7DD;
+            font-size: 18px;
+            background-color: #2c1c1a;
+        }
+
+        .upper-btn {
+            padding: 5px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #5E463D;
+            font-size: 18px;
+            background-color: #EDE7DD;
+        }
+
+        .del-btn {
+            padding: 5px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #EDE7DD;
+            font-size: 18px;
+            background-color: darkred;
+        }
+
+        .button-group {
+            display: flex;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+
+        main {
+            background-color: #d3b997;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            margin-top: 80px;
+        }
+
+        .form-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            .form-table td {
+                padding: 8px 0;
+                vertical-align: top;
+            }
+
+        .label-cell {
+            width: 40%;
+            padding-right: 10px;
+        }
+
+        .input-cell {
+            width: 60%;
+        }
+
+        .submit-cell {
+            text-align: center;
+            padding-top: 15px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        .text-danger {
+            color: red;
+            font-size: 0.875em;
+        }
+        .error-container {
+            width: 95%;
+            margin: 0 auto 20px;
+            padding: 15px;
+            background-color: rgba(255, 107, 107, 0.1);
+            border-left: 4px solid red;
+            color: red;
+            border-radius: 4px;
+        }
+
+        .error-message {
+            margin: 0px 0;
+            font-size: 14px;
+        }
+        .form-errors {
+            width: 100%;
+            margin: 0 0 20px 0;
+            padding: 15px;
+            background-color: rgba(255, 107, 107, 0.1);
+            border-left: 4px solid red;
+            color: red;
+            border-radius: 4px;
+        }
+
+        .error-item {
+            margin: 0px 0;
+            font-size: 14px;
+        }
+
+        .viewbag-error {
+            color: #EDE7DD;
+            background-color: darkred;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            border-left: 3px solid red;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="button-group">
+        <a href="@Url.Action("Logout", "User")" class="back-btn">Выйти</a>
+        <a href="@Url.Action("GetAllDrinks", "Drink")" class="upper-btn">Список напитков</a>
+        <a href="@Url.Action("GetAllCompanies", "Company")" class="upper-btn">Список сетей кофеен</a>
+        <a href="@Url.Action("GetFavDrinks", "Drink")" class="upper-btn">Список избранных напитков</a>
+        <a href="@Url.Action("GetFavCoffeeShops", "CoffeeShop")" class="upper-btn">Список избранных кофеен</a>
+
+        @if (Model != null)
+        {@if (Model.Id_role == 3)
+            {
+                <a href="@Url.Action("GetAllUsers", "User")" class="upper-btn">Список пользователей</a>
+            }
+        }
+        <a href="@Url.Action("EditProfile", "User")" class="del-btn">Профиль</a>
+    </div>
+    
+    <main>
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <h3>Добавление нового напитка:</h3>
+            @if (ViewBag.ErrorMessage != null)
+            {
+                <div class="viewbag-error">
+                    @ViewBag.ErrorMessage
+                </div>
+            }
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="form-errors">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <div class="error-item">@error.ErrorMessage</div>
+                    }
+                </div>
+            }
+            <table class="form-table">
+                <tr>
+                    <td class="label-cell">
+                        <label asp-for="Name"></label>
+                    </td>
+                    <td class="input-cell">
+                        <input asp-for="Name" name="Name" class="form-control" placeholder="Название" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td colspan="2" class="submit-cell">
+                        <input type="submit" value="Сохранить" class="btn btn-primary" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </main>
+
+    
+</body>
+</html>

@@ -1,0 +1,139 @@
+﻿@model CoffeeShops.ViewModels.EditProfileViewModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/css/log_reg_style.css" />
+    <link rel="stylesheet" href="~/css/errorstyle.css" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        .text-danger {
+            color: red;
+            margin: 5px 0;
+        }
+
+        .validation-errors {
+            color: red;
+            background-color: #f8d7da;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            border-left: 3px solid red;
+        }
+
+        .viewbag-error {
+            color: #EDE7DD;
+            background-color: darkred;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            border-left: 3px solid red;
+        }
+
+        .del-btn {
+            padding: 5px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #EDE7DD;
+            font-size: 18px;
+            background-color: darkred;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <form method="post">
+            @Html.AntiForgeryToken()
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="viewbag-error">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="validation-errors">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <div class="text-danger">@error.ErrorMessage</div>
+                    }
+                </div>
+            }
+
+            <a href="@Url.Action("DeleteUser", "User")" class="del-btn">Удалить аккаунт</a>
+
+            <h3>Редактирование профиля</h3>
+
+
+            <div class="form-group">
+                <label asp-for="Login"></label>
+                <div class="col-md-5">
+                    <input asp-for="Login"
+                           name="Login"
+                           class="form-control"
+                           placeholder="Логин"
+                           value="@Model.Login" /> 
+                    <span asp-validation-for="Login" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                <div class="col-md-5">
+                    <input asp-for="Email"
+                           name="Email"
+                           class="form-control"
+                           placeholder="Электронная почта"
+                           value="@Model.Email" /> 
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="BirthDate"></label>
+                <div class="col-md-5">
+                    <input asp-for="BirthDate"
+                           name="BirthDate"
+                           type="date"
+                           class="form-control"
+                           max="@DateTime.Now.ToString("yyyy-MM-dd")"
+                           value="@Model.BirthDate.ToString("yyyy-MM-dd")" />
+                    <span asp-validation-for="BirthDate" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="NewPassword">Новый пароль</label>
+                <div class="col-md-5">
+                    <input asp-for="NewPassword" name="NewPassword" type="password"
+                           class="form-control"
+                           placeholder="Оставьте пустым, если не хотите менять" />
+                    <span asp-validation-for="NewPassword" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ConfirmPassword">Подтвердите пароль</label>
+                <div class="col-md-5">
+                    <input asp-for="ConfirmPassword" name="ConfirmPassword" type="password"
+                           class="form-control"
+                           placeholder="Подтвердите новый пароль" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group text-center">
+                <input type="submit" value="Сохранить изменения" class="btn btn-primary" />
+            </div>
+
+            <div class="text-center mt-5">
+                <a href="@Url.Action("GetAllCompanies", "Company")">Вернуться на главную</a>
+            </div>
+        </form>
+    </main>
+</body>
+</html>

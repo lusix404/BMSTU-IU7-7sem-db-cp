@@ -1,0 +1,272 @@
+﻿
+
+@model CoffeeShops.ViewModels.CompaniesListViewModel
+
+@{
+    ViewData["Title"] = "Сети кофеен";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/bg_color_style.css" />
+    <link rel="stylesheet" href="~/css/header_container_style.css" />
+    <link rel="stylesheet" href="~/css/logo_style.css" />
+    <link rel="stylesheet" href="~/css/logout_button.css" />
+    <style>
+        .company-list {
+            width: 90%;
+            margin: 20px auto;
+            color: #EDE7DD;
+            font-size: 14px;
+        }
+
+        .fixed-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            table-layout: fixed;
+        }
+
+            .fixed-table th, .fixed-table td {
+                border: 1px solid #EDE7DD;
+                padding: 10px;
+                text-align: left;
+                vertical-align: middle;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                white-space: normal;
+            }
+
+            .fixed-table th {
+                background-color: #5E463D;
+                color: #EDE7DD;
+                font-weight: bold;
+            }
+
+            .fixed-table td {
+                color: #EDE7DD;
+                background-color: rgba(94, 70, 61, 0.5);
+            }
+
+            .fixed-table .col-name {
+                width: 250px;
+                min-width: 250px;
+                max-width: 250px;
+            }
+
+            .fixed-table .col-website {
+                width: 200px;
+                min-width: 200px;
+                max-width: 200px;
+            }
+
+            .fixed-table .col-shops {
+                width: 150px;
+                min-width: 150px;
+                max-width: 150px;
+                text-align: center;
+            }
+
+            .fixed-table .col-actions {
+                width: 400px;
+                min-width: 400px;
+            }
+
+        .action-btn {
+            padding: 5px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #5E463D;
+            font-size: 14px;
+            background-color: #EDE7DD;
+            margin-right: 5px;
+            display: inline-block;
+            white-space: nowrap;
+            margin-bottom: 5px;
+        }
+
+            .action-btn:hover {
+                background-color: #d4c9b8;
+            }
+
+        h2 {
+            color: #EDE7DD;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #EDE7DD;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .empty-cell {
+            color: #999;
+            font-style: italic;
+        }
+
+        .back-btn {
+            padding: 5px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #EDE7DD;
+            font-size: 18px;
+            background-color: #2c1c1a;
+            white-space: nowrap;
+        }
+
+        .upper-btn {
+            padding: 5px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #5E463D;
+            font-size: 18px;
+            background-color: #EDE7DD;
+            white-space: nowrap;
+        }
+
+        .del-btn {
+            padding: 5px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #EDE7DD;
+            font-size: 18px;
+            background-color: darkred;
+            white-space: nowrap;
+        }
+
+        .viewbag-error {
+            color: #EDE7DD;
+            background-color: darkred;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            border-left: 3px solid red;
+            word-wrap: break-word;
+        }
+
+        .newcomp-btn {
+            padding: 5px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: white;
+            font-size: 18px;
+            background-color: #572918;
+            white-space: nowrap;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .text-wrap {
+            white-space: normal;
+            word-break: break-word;
+        }
+        .actions-cell {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <div class="button-group">
+            <a href="@Url.Action("Logout", "User")" class="back-btn">Выйти</a>
+            <a href="@Url.Action("GetAllDrinks", "Drink")" class="upper-btn">Список напитков</a>
+            <a href="@Url.Action("GetAllCompanies", "Company")" class="upper-btn">Список сетей кофеен</a>
+            <a href="@Url.Action("GetFavDrinks", "Drink")" class="upper-btn">Список избранных напитков</a>
+            <a href="@Url.Action("GetFavCoffeeShops", "CoffeeShop")" class="upper-btn">Список избранных кофеен</a>
+
+            @if (Model != null)
+            {@if (Model.Id_role == 3)
+                {
+                    <a href="@Url.Action("GetAllUsers", "User")" class="upper-btn">Список пользователей</a>
+                }
+            }
+
+            <a href="@Url.Action("EditProfile", "User")" class="del-btn">Профиль</a>
+        </div>
+    </div>
+    <div class="company-list">
+        <h2>Все сети кофеен:</h2>
+        @if (Model?.Id_role == 2 || Model?.Id_role == 3)
+        {
+            <a href="@Url.Action("AddCompany", "Company")" class="newcomp-btn">+ Добавить новую сеть кофеен</a>
+        }
+        @if (ViewBag.ErrorMessage != null)
+        {
+            <div class="viewbag-error">
+                @ViewBag.ErrorMessage
+            </div>
+        }
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div style="color: red; background-color: #2c1c1a; padding: 10px; border-radius: 4px; margin-bottom: 20px; word-wrap: break-word;">
+                @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+            </div>
+        }
+
+        @if (Model.Companies.Any())
+        {
+            <table class="fixed-table">
+                <thead>
+                    <tr>
+                        <th class="col-name">Название</th>
+                        <th class="col-website">Вебсайт</th>
+                        <th class="col-shops">Количество кофеен</th>
+                        <th class="col-actions">Доступные действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var company in Model.Companies)
+                    {
+                        <tr>
+                            <td class="col-name text-wrap">@company.Name</td>
+                            <td class="col-website text-wrap">
+                                @if (string.IsNullOrEmpty(company.Website))
+                                {
+                                    <span class='empty-cell'>не указан</span>
+                                }
+                                else
+                                {
+                                    @company.Website
+                                }
+                            </td>
+                            <td class="col-shops">@company.AmountCoffeeShops</td>
+                            <td class="col-actions">
+                                <div class="actions-cell">
+                                    <a href="@Url.Action("GetLpByCompanyId", "LoyaltyProgram", new { comp_id = company.Id_company, comp_name = company.Name })"
+                                       class="action-btn lp-btn">Программа лояльности</a>
+                                    <a href="@Url.Action("GetCoffeeShopsByCompany", "CoffeeShop", new { companyId = company.Id_company, companyName = company.Name })"
+                                       class="action-btn shops-btn">Кофейни</a>
+                                    <a href="@Url.Action("GetMenuByCompany", "Menu", new { companyId = company.Id_company })"
+                                       class="action-btn shops-btn">Меню</a>
+                                    @if (Model.Id_role == 2 || Model.Id_role == 3)
+                                    {
+                                        <a href="@Url.Action("DeleteCompany", "Company", new {  id_company = company.Id_company })"
+                                           class="action-btn">Удалить</a>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>В системе нет ни одной сети кофеен</p>
+        }
+    </div>
+</body>
+</html>
