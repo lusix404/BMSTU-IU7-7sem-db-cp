@@ -1,0 +1,200 @@
+﻿@model CoffeeShops.ViewModels.LoyaltyProgramViewModel
+
+@{
+    ViewData["Title"] = "Программа лояльности";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/bg_color_style.css" />
+    <link rel="stylesheet" href="~/css/logo_style.css" />
+    <link rel="stylesheet" href="~/css/logout_button.css" />
+    <style>
+        .loyalty-program {
+            width: 80%;
+            margin: 20px auto;
+            color: #EDE7DD;
+            font-size: 14px;
+        }
+
+        .loyalty-header {
+            color: #EDE7DD;
+            margin-bottom: 20px;
+        }
+
+        .loyalty-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            color: #EDE7DD;
+            table-layout: fixed;
+        }
+
+            .loyalty-table th, .loyalty-table td {
+                padding: 12px;
+                border: 1px solid #EDE7DD;
+                text-align: left;
+                word-wrap: break-word;
+                overflow-wrap: break-word; 
+                white-space: normal;
+            }
+
+            .loyalty-table th {
+                background-color: #5E463D;
+            }
+
+            .loyalty-table tr:nth-child(even) {
+                background-color: rgba(94, 70, 61, 0.3);
+            }
+
+            .loyalty-table th:nth-child(1),
+            .loyalty-table td:nth-child(1) {
+                width: 20%;
+            }
+
+            .loyalty-table th:nth-child(2),
+            .loyalty-table td:nth-child(2) {
+                width: 80%; 
+            }
+
+        .no-data {
+            padding: 10px;
+            border: 1px solid #EDE7DD;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .back-btn {
+            padding: 5px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #EDE7DD;
+            font-size: 18px;
+            background-color: #2c1c1a;
+        }
+
+        .upper-btn {
+            padding: 5px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #5E463D;
+            font-size: 18px;
+            background-color: #EDE7DD;
+        }
+
+        .del-btn {
+            padding: 5px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #EDE7DD;
+            font-size: 18px;
+            background-color: darkred;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .error-container {
+            width: 95%;
+            margin: 0 auto 20px;
+            padding: 15px;
+            background-color: rgba(255, 107, 107, 0.1);
+            border-left: 3px solid red;
+            color: red;
+            border-radius: 4px;
+        }
+
+        .error-message {
+            margin: 5px 0;
+        }
+
+        .viewbag-error {
+            color: #EDE7DD;
+            background-color: darkred;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            border-left: 3px solid red;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <div class="button-group">
+            <a href="@Url.Action("Logout", "User")" class="back-btn">Выйти</a>
+            <a href="@Url.Action("GetAllDrinks", "Drink")" class="upper-btn">Список напитков</a>
+            <a href="@Url.Action("GetAllCompanies", "Company")" class="upper-btn">Список сетей кофеен</a>
+            <a href="@Url.Action("GetFavDrinks", "Drink")" class="upper-btn">Список избранных напитков</a>
+            <a href="@Url.Action("GetFavCoffeeShops", "CoffeeShop")" class="upper-btn">Список избранных кофеен</a>
+
+            @if (Model != null && Model.Id_role == 3)
+            {
+                <a href="@Url.Action("GetAllUsers", "User")" class="upper-btn">Список пользователей</a>
+            }
+
+            <a href="@Url.Action("EditProfile", "User")" class="del-btn">Профиль</a>
+        </div>
+        @if (ViewBag.ErrorMessage != null)
+        {
+            <div class="viewbag-error">
+                @ViewBag.ErrorMessage
+            </div>
+        }
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="error-container">
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <div class="error-message">@error.ErrorMessage</div>
+                }
+            </div>
+        }
+
+        <div class="loyalty-program">
+            <h2 class="loyalty-header">Программа лояльности @Model.Company_name</h2>
+
+            @if (Model == null || Model.LoyaltyProgram == null)
+            {
+                <div class="no-data">
+                    Информация о программе лояльности данной сети кофеен отсутствует
+                </div>
+                <a href="@Url.Action("AddLoyaltyProgram", "LoyaltyProgram", new { id_company = Model.Id_company })" class="del-btn">+ Добавить информацию о программе лояльности</a>
+                
+            }
+            else 
+            {
+                <table class="loyalty-table">
+                    <thead>
+                        <tr>
+                            <th>Тип</th>
+                            <th>Предложения</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@(Model.LoyaltyProgram.Type ?? "Не указан")</td>
+                            @if (Model.LoyaltyProgram.Description == null)
+                            {
+                                <td style="white-space: pre-line"> Информация о программе лояльности отсутствует</td>
+                            }
+                            @if (Model.LoyaltyProgram.Description != null)
+                            {
+                                <td style="white-space: pre-line">@Model.LoyaltyProgram.Description"</td>
+                            }
+                               
+                           
+
+                        </tr>
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</body>
+</html>

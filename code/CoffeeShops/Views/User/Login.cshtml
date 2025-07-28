@@ -1,0 +1,87 @@
+﻿@model CoffeeShops.ViewModels.LoginUserViewModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/css/log_reg_style.css" />
+    <title>Вход в аккаунт</title>
+    <style>
+        .text-danger {
+            color: red;
+            margin: 5px 0;
+        }
+
+        .validation-errors {
+            color: red;
+            background-color: #f8d7da;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            border-left: 3px solid red;
+        }
+
+        .viewbag-error {
+            color: #EDE7DD;
+            background-color: darkred;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            border-left: 3px solid red;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <h3>Вход в аккаунт</h3>
+            @if (ViewBag.ErrorMessage != null)
+            {
+                <div class="viewbag-error">
+                    @ViewBag.ErrorMessage
+                </div>
+            }
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="validation-errors">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <div class="text-danger">@error.ErrorMessage</div>
+                    }
+                </div>
+            }
+
+            <div class="form-group">
+                <label asp-for="Login"></label>
+                <div class="col-md-5">
+                    <input asp-for="Login" name="Login" class="form-control" placeholder="Логин" />
+                    <span asp-validation-for="Login" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Password"></label>
+                <div class="col-md-5">
+                    <input asp-for="Password" name="Password" class="form-control" placeholder="Пароль" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group text-center">
+                <input type="submit" value="Войти" class="btn btn-primary" />
+            </div>
+
+            <div class="text-center mt-5">
+                @Html.ActionLink("Нет аккаунта? Зарегистрироваться", "Register", "User")
+            </div>
+        </form>
+    </main>
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+    }
+</body>
+</html>
